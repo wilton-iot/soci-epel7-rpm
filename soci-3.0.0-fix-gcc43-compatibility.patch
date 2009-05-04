@@ -1,0 +1,47 @@
+diff -u -r soci-3.0.0_ref/src/backends/mysql/common.h soci-3.0.0_working/src/backends/mysql/common.h
+--- soci-3.0.0_ref/src/backends/mysql/common.h  2008-07-03 09:22:57.000000000 +0200
++++ soci-3.0.0_working/src/backends/mysql/common.h      2009-03-26 15:33:33.000000000 +0100
+@@ -10,6 +10,7 @@
+
+ #include <sstream>
+ #include "soci-mysql.h"
++#include <ctime>
+
+ namespace soci
+ {
+diff -u -r soci-3.0.0_ref/src/backends/mysql/session.cpp soci-3.0.0_working/src/backends/mysql/session.cpp
+--- soci-3.0.0_ref/src/backends/mysql/session.cpp       2008-05-15 15:58:38.000000000 +0200
++++ soci-3.0.0_working/src/backends/mysql/session.cpp   2009-03-26 15:34:50.000000000 +0100
+@@ -11,7 +11,8 @@
+ #include <cctype>
+ #include <cerrno>
+ #include <ciso646>
+-
++#include <cstdlib>
++#include <climits>
+
+ #ifdef _MSC_VER
+ #pragma warning(disable:4355)
+diff -u -r soci-3.0.0_ref/src/backends/mysql/standard-into-type.cpp soci-3.0.0_working/src/backends/mysql/standard-into-type.cpp
+--- soci-3.0.0_ref/src/backends/mysql/standard-into-type.cpp    2008-05-30 13:33:45.000000000 +0200
++++ soci-3.0.0_working/src/backends/mysql/standard-into-type.cpp        2009-03-26 15:34:09.000000000 +0100
+@@ -12,6 +12,8 @@
+ #include "common.h"
+ #include <ciso646>
+ #include <cassert>
++#include <ctime>
++#include <cstring>
+
+ #ifdef _MSC_VER
+ #pragma warning(disable:4355)
+diff -u -r soci-3.0.0_ref/src/backends/mysql/vector-use-type.cpp soci-3.0.0_working/src/backends/mysql/vector-use-type.cpp
+--- soci-3.0.0_ref/src/backends/mysql/vector-use-type.cpp       2008-05-15 15:58:38.000000000 +0200
++++ soci-3.0.0_working/src/backends/mysql/vector-use-type.cpp   2009-03-26 15:33:14.000000000 +0100
+@@ -13,6 +13,7 @@
+ #include <ciso646>
+ #include <limits>
+ #include <cstring>
++#include <ctime>
+
+ #ifdef _MSC_VER
+ #pragma warning(disable:4355)

@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -239,8 +239,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %dir %{_includedir}/%{name}
+%dir %{_includedir}/%{name}/core
 %{_includedir}/%{name}/*.h
-%{_includedir}/%{name}/core
+%{_includedir}/%{name}/core/*.h
+%{_includedir}/%{name}/core/test
 %{_bindir}/%{name}-config
 %{_libdir}/lib%{name}_core.so
 %{_libdir}/pkgconfig/%{name}.pc
@@ -275,6 +277,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-10
+- Burried the Boost Fusion header include for core/test/common-tests.h
+
 * Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-9
 - Added a missing cstdio header include for g++-4.4 compatibility
 

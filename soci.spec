@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -275,6 +275,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-7
+- Added a missing cstdio header include for g++-4.4 compatibility
+
 * Sat May 02 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-6
 - Removed the unused build conditionals
 

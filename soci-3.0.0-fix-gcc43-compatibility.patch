@@ -45,3 +45,14 @@ diff -u -r soci-3.0.0_ref/src/backends/mysql/vector-use-type.cpp soci-3.0.0_work
 
  #ifdef _MSC_VER
  #pragma warning(disable:4355)
+diff -ru soci-3.0.0/src/core/soci-simple.cpp soci-3.0.0_4-pack/src/core/soci-simple.cpp
+--- soci-3.0.0/src/core/soci-simple.cpp 2008-07-01 09:42:25.000000000 +0200
++++ soci-3.0.0_4-pack/src/core/soci-simple.cpp  2009-05-05 16:17:38.000000000 +0200
+@@ -9,6 +9,7 @@
+
+ #include "soci-simple.h"
+ #include "soci.h"
++#include <cstdio>
+
+ using namespace soci;
+

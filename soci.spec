@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -133,7 +133,7 @@ to install %{name}-oracle.}
 Summary:        HTML documentation for the SOCI library
 Group:          Documentation
 BuildArch:      noarch
-BuildRequires:  doxygen, texlive-latex, texlive-dvips, ghostscript
+#BuildRequires:  doxygen, texlive-latex, texlive-dvips, ghostscript
 
 %description doc
 This package contains the documentation in the HTML format of the SOCI
@@ -277,6 +277,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-11
+- Removed the dependency on Latex for documentation delivery
+
 * Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-10
 - Burried the Boost Fusion header include for core/test/common-tests.h
 

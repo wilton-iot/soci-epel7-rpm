@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        11%{?dist}
+Release:        13%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -27,13 +27,13 @@ License:        Boost
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/soci/%{name}-%{version}.tar.gz
 # That patch will be submitted upstream
-Patch0:         %{name}-%{version}-fix-gcc43-compatibility.patch
+Patch0:         %{name}-%{version}-13-fix-gcc43-compatibility.patch
 # That patch will be submitted upstream
-Patch1:         %{name}-%{version}-fix-gnu-autotools-compatibility.patch
+Patch1:         %{name}-%{version}-13-fix-gnu-autotools-compatibility.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  boost-devel >= 1.34
-BuildRequires:  cppunit-devel >= 1.10
+BuildRequires:  boost-devel
+#BuildRequires:  cppunit-devel >= 1.10
 BuildRequires:  libtool
 #Requires:       
 
@@ -132,8 +132,12 @@ to install %{name}-oracle.}
 %package doc
 Summary:        HTML documentation for the SOCI library
 Group:          Documentation
+%if 0%{?fedora} >= 10
 BuildArch:      noarch
-#BuildRequires:  doxygen, texlive-latex, texlive-dvips, ghostscript
+#BuildRequires:  texlive-latex, texlive-dvips
+%endif
+#BuildRequires:  tetex-latex, tetex-dvips
+#BuildRequires:  doxygen, ghostscript
 
 %description doc
 This package contains the documentation in the HTML format of the SOCI
@@ -142,24 +146,30 @@ library. The documentation is the same as at the SOCI web page.
 
 %prep
 %setup -q
+
+# Apply the g++ 4.3 compatibility patch
+%patch0 -p1
+
 # Rename change-log and license file, so that they comply with
 # packaging standard
 mv CHANGES ChangeLog
 mv LICENSE_1_0.txt COPYING
 rm -f INSTALL
-# Apply the g++ 4.3 compatibility patch
-%patch0 -p1
+
 # Remove MacOSX compatibility building files
 rm -f build/unix/._*.tcl
 rm -f ._Makefile ._configure
-rm -f soci/core/._*.h soci/core/._*.cpp
-rm -f soci/backends/postgresql/._*.h
+rm -f src/core/._*.h src/core/._*.cpp
+rm -f src/backends/postgresql/._*.h
 rm -f doc/._*.html
+
 # Rename the source code directory, so that the files (e.g, header
 # files) can be exported correctly into {_standard_dir}/%{name}
 mv src %{name}
+
 # Apply the GNU Autotools compatibility patch
 %patch1 -p1
+
 # Fix some permissions and formats
 find ./doc -type f -perm 755 -exec chmod 644 {} \;
 chmod -x AUTHORS ChangeLog COPYING NEWS README
@@ -277,6 +287,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 09 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-13
+- Introduced distinct dependencies for different distributions
+
+* Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-12
+- Removed the dependency on the version of Boost, and on CPPUnit
+
 * Tue May 05 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-11
 - Removed the dependency on Latex for documentation delivery
 

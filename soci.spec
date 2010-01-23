@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        15%{?dist}
+Release:        16%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -27,9 +27,9 @@ License:        Boost
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/soci/%{name}-%{version}.tar.gz
 # That patch will be submitted upstream
-Patch0:         %{name}-%{version}-13-fix-gcc43-compatibility.patch
+Patch0:         %{name}-%{version}-16-fix-gcc44-compatibility.patch
 # That patch will be submitted upstream
-Patch1:         %{name}-%{version}-13-fix-gnu-autotools-compatibility.patch
+Patch1:         %{name}-%{version}-16-fix-gnu-autotools-compatibility.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  boost-devel
@@ -147,7 +147,7 @@ library. The documentation is the same as at the SOCI web page.
 %prep
 %setup -q
 
-# Apply the g++ 4.3 compatibility patch
+# Apply the g++ 4.4 compatibility patch
 %patch0 -p1
 
 # Rename change-log and license file, so that they comply with
@@ -287,6 +287,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jan 23 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-16
+- Added a missing cstring header include for g++-4.4 compatibility
+
 * Fri Jan 22 2010 Rahul Sundaram <sundaram@fedoraproject.org> - 3.0.0-15
 - Rebuild for Boost soname bump
 

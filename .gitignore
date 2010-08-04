@@ -1,1 +1,6 @@
-soci-3.0.0.tar.gz
+soci-*.tar.*
+soci-*.src.rpm
+.gitignore
+clog
+.build-*
+

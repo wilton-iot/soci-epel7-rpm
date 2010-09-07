@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        16%{?dist}
+Release:        17%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -30,12 +30,12 @@ Source0:        http://downloads.sourceforge.net/soci/%{name}-%{version}.tar.gz
 Patch0:         %{name}-%{version}-16-fix-gcc44-compatibility.patch
 # That patch will be submitted upstream
 Patch1:         %{name}-%{version}-16-fix-gnu-autotools-compatibility.patch
+# Patch fixing compilation bug (https://bugzilla.redhat.com/show_bug.cgi?id=631175):
+Patch2:         %{name}-%{version}-16-fix-make-tab.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  boost-devel
-#BuildRequires:  cppunit-devel >= 1.10
 BuildRequires:  libtool
-#Requires:       
 
 %description
 SOCI is a C++ database access library that provides the
@@ -170,6 +170,9 @@ mv src %{name}
 # Apply the GNU Autotools compatibility patch
 %patch1 -p1
 
+# Apply the patch for the Make bug
+%patch2 -p0
+
 # Fix some permissions and formats
 find ./doc -type f -perm 755 -exec chmod 644 {} \;
 chmod -x AUTHORS ChangeLog COPYING NEWS README
@@ -287,6 +290,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 07 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-17
+- Fixed bug #631175 (https://bugzilla.redhat.com/show_bug.cgi?id=631175)
+
 * Sat Jan 23 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-16
 - Added a missing cstring header include for g++-4.4 compatibility
 
@@ -334,3 +340,4 @@ rm -rf $RPM_BUILD_ROOT
 
 * Fri Mar 27 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-1
 - First RPM release
+

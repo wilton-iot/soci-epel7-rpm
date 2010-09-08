@@ -1,4 +1,4 @@
 1bf7dd244764e53557c1ecc01fdfac96  soci-3.0.0.tar.gz
-e7b935243b2116ec465755eb6593896f  soci-3.0.0-16-fix-make-tab.patch
 65c1ca90695a11a687611cfdf9f7361c  soci-3.0.0-16-fix-gcc44-compatibility.patch
 e5e6200863e62a360f1fc77c2d56dd9b  soci-3.0.0-16-fix-gnu-autotools-compatibility.patch
+e2f9e1fdd88d623814579c252af9ff77  soci-3.0.0-16-fix-make-tab.patch

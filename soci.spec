@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        17%{?dist}
+Release:        18%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -171,7 +171,7 @@ mv src %{name}
 %patch1 -p1
 
 # Apply the patch for the Make bug
-%patch2 -p0
+%patch2 -p1
 
 # Fix some permissions and formats
 find ./doc -type f -perm 755 -exec chmod 644 {} \;
@@ -290,7 +290,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Sep 07 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-17
+* Tue Sep 07 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-18
 - Fixed bug #631175 (https://bugzilla.redhat.com/show_bug.cgi?id=631175)
 
 * Sat Jan 23 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-16

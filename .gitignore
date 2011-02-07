@@ -4,4 +4,7 @@ soci-*.*.*-*.patch
 .gitignore
 clog
 .build-*
+/soci-3.0.0
+/noarch
+/x86_64
 

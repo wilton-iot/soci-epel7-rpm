@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        18%{?dist}
+Release:        19%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -290,6 +290,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Feb 07 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-19
+- Rebuild for Boost soname bump
+
 * Tue Sep 07 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-18
 - Fixed bug #631175 (https://bugzilla.redhat.com/show_bug.cgi?id=631175)
 

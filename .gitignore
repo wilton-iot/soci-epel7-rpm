@@ -1,6 +1,5 @@
 soci-*.tar.*
 soci-*.src.rpm
-soci-*.*.*-*.patch
 .gitignore
 clog
 .build-*

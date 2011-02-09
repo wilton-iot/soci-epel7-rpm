@@ -25,20 +25,26 @@ Summary:        The database access library for C++ programmers
 Group:          System Environment/Libraries
 License:        Boost
 URL:            http://%{name}.sourceforge.net
-Source0:        http://downloads.sourceforge.net/soci/%{name}-%{version}.tar.gz
-# That patch will be submitted upstream
-Patch0:         %{name}-%{version}-16-fix-gcc44-compatibility.patch
-# That patch will be submitted upstream
-Patch1:         %{name}-%{version}-16-fix-gnu-autotools-compatibility.patch
-# Patch fixing compilation bug (https://bugzilla.redhat.com/show_bug.cgi?id=631175):
-Patch2:         %{name}-%{version}-16-fix-make-tab.patch
+Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+# This issue has been fixed upstream, e.g., see:
+#  http://soci.git.sourceforge.net/git/gitweb.cgi?p=soci/soci;a=commitdiff;h=9e467b5a4ab4cdda6cd801fb76b2d853340dc5d7):
+Patch0:         %{name}-%{version}-gcc46-compatibility.patch
+# This patch is being submitted upstream. A decision about whether and how
+# burying headers) should be taken after the release of version 3.1.0):
+Patch1:         %{name}-%{version}-buried-headers.patch
+# Just add standard documentation, from upstream documents:
+Patch2:         %{name}-%{version}-add-doc.patch
+# This patch is temporary, for the 3.0.0 version, as:
+#  * it allows to build cleanly with the GNU Autotools;
+#  * whereas upstream now uses CMake.
+Patch3:         %{name}-%{version}-gnu-autotools-compatibility.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  boost-devel
 BuildRequires:  libtool
 
 %description
-SOCI is a C++ database access library that provides the
+%{name} is a C++ database access library that provides the
 illusion of embedding SQL in regular C++ code, staying entirely within
 the C++ standard.
 
@@ -147,7 +153,7 @@ library. The documentation is the same as at the SOCI web page.
 %prep
 %setup -q
 
-# Apply the g++ 4.4 compatibility patch
+# Apply the g++ 4.6 compatibility patch
 %patch0 -p1
 
 # Rename change-log and license file, so that they comply with
@@ -167,11 +173,14 @@ rm -f doc/._*.html
 # files) can be exported correctly into {_standard_dir}/%{name}
 mv src %{name}
 
-# Apply the GNU Autotools compatibility patch
+# Apply the buried headers patch
 %patch1 -p1
 
-# Apply the patch for the Make bug
+# Add standard documentation
 %patch2 -p1
+
+# Apply the GNU Autotools compatibility patch
+%patch3 -p1
 
 # Fix some permissions and formats
 find ./doc -type f -perm 755 -exec chmod 644 {} \;
@@ -290,8 +299,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Feb 07 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-19
-- Rebuild for Boost soname bump
+* Tue Feb 08 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-19
+- Fixed a compilation error with g++ 4.6 on default constructor definition
+- Split the big patch into smaller pieces
 
 * Tue Sep 07 2010 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-18
 - Fixed bug #631175 (https://bugzilla.redhat.com/show_bug.cgi?id=631175)

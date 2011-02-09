@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        19%{?dist}
+Release:        20%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -299,6 +299,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.0-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Tue Feb 08 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-19
 - Fixed a compilation error with g++ 4.6 on default constructor definition
 - Split the big patch into smaller pieces

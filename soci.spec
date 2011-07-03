@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        21%{?dist}
+Release:        22%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -50,36 +50,36 @@ the C++ standard.
 
 
 %{?with_mysql:%package        mysql
-Summary:        MySQL backend for %{name}
+Summary:        MySQL back-end for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name} = %{version}-%{release}
 BuildRequires:  mysql-devel >= 5.0
 
 %description    mysql
-This package contains the MySQL backend for SOCI, i.e.,
+This package contains the MySQL back-end for SOCI, i.e.,
 dynamic library specific to the MySQL database. If you would like to
 use SOCI in your programs with MySQL, you will need to
 install %{name}-mysql.}
 
 %{?with_postgresql:%package        postgresql
-Summary:        PostGreSQL backend for %{name}
+Summary:        PostGreSQL back-end for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name} = %{version}-%{release}
 BuildRequires:  postgresql-devel >= 7.1
 
 %description    postgresql
-This package contains the PostGreSQL backend for SOCI, i.e.,
+This package contains the PostGreSQL back-end for SOCI, i.e.,
 dynamic library specific to the PostGreSQL database. If you would like
 to use SOCI in your programs with PostGreSQL, you will need to
 install %{name}-postgresql.}
 
 %{?with_oracle:%package        oracle
-Summary:        Oracle backend for %{name}
+Summary:        Oracle back-end for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name} = %{version}-%{release}
 
 %description    oracle
-This package contains the Oracle backend for SOCI, i.e.,
+This package contains the Oracle back-end for SOCI, i.e.,
 dynamic library specific to the Oracle database. If you would like to
 use SOCI in your programs with Oracle, you will need to install
 %{name}-oracle.}
@@ -97,39 +97,39 @@ development documentation for %{name}. If you would like to develop
 programs using %{name}, you will need to install %{name}-devel.
 
 %{?with_mysql:%package        mysql-devel
-Summary:        MySQL backend for %{name}
+Summary:        MySQL back-end for %{name}
 Group:          Development/Libraries
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       %{name}-mysql = %{version}-%{release}
 Requires:       mysql-devel >= 5.0
 
 %description    mysql-devel
-This package contains the MySQL backend for %{name}, i.e., header
+This package contains the MySQL back-end for %{name}, i.e., header
 files and dynamic libraries specific to the MySQL database. If you
 would like to develop programs using %{name} and MySQL, you will need
 to install %{name}-mysql.}
 
 %{?with_postgresql:%package        postgresql-devel
-Summary:        PostGreSQL backend for %{name}
+Summary:        PostGreSQL back-end for %{name}
 Group:          Development/Libraries
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       %{name}-postgresql = %{version}-%{release}
 Requires:       postgresql-devel >= 7.1
 
 %description    postgresql-devel
-This package contains the PostGreSQL backend for %{name}, i.e., header
+This package contains the PostGreSQL back-end for %{name}, i.e., header
 files and dynamic libraries specific to the PostGreSQL database. If
 you would like to develop programs using %{name} and PostGreSQL, you
 will need to install %{name}-postgresql.}
 
 %{?with_oracle:%package        oracle-devel
-Summary:        Oracle backend for %{name}
+Summary:        Oracle back-end for %{name}
 Group:          Development/Libraries
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       %{name}-oracle = %{version}-%{release}
 
 %description    oracle-devel
-This package contains the Oracle backend for %{name}, i.e., header
+This package contains the Oracle back-end for %{name}, i.e., header
 files and dynamic libraries specific to the Oracle database. If you
 would like to develop programs using %{name} and Oracle, you will need
 to install %{name}-oracle.}
@@ -170,7 +170,7 @@ rm -f src/backends/postgresql/._*.h
 rm -f doc/._*.html
 
 # Rename the source code directory, so that the files (e.g, header
-# files) can be exported correctly into {_standard_dir}/%{name}
+# files) can be exported correctly into {_standard_dir}/%%{name}
 mv src %{name}
 
 # Apply the buried headers patch
@@ -299,6 +299,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 03 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-22
+- Now links with the multi-threaded versions of the Boost libraries
+
 * Mon Apr 25 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-21
 - Rebuild for Boost-1.46.1-2
 

@@ -18,7 +18,7 @@
 #
 Name:           soci
 Version:        3.0.0
-Release:        22%{?dist}
+Release:        23%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -299,6 +299,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jul 23 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-23
+- Rebuild for Boost-1.47.0-2
+
 * Sun Jul 03 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-22
 - Now links with the multi-threaded versions of the Boost libraries
 

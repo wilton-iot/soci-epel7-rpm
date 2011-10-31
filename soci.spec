@@ -1,13 +1,17 @@
 #
 ##
-# Default values are --with mysql --with postgresql --without oracle 
+# Default values are --with empty --with sqlite3 --with mysql --with postgresql
+#                    --with odbc --without oracle 
 # Note that, for Oracle, when enabled, the following options should
 # also be given:
 # --with-oracle-include=/opt/oracle/app/oracle/product/11.1.0/db_1/rdbms/public
 # --with-oracle-lib=/opt/oracle/app/oracle/product/11.1.0/db_1/lib
 # If the macros are defined, redefine them with the correct compilation flags.
+%bcond_without empty
+%bcond_without sqlite3
 %bcond_without mysql
 %bcond_without postgresql
+%bcond_without odbc
 %bcond_with oracle
 
 %define _default_oracle_dir /opt/oracle/app/oracle/product/11.1.0/db_1
@@ -17,29 +21,18 @@
 ##
 #
 Name:           soci
-Version:        3.0.0
-Release:        23%{?dist}
+Version:        3.1.0
+Release:        1%{?dist}
 
 Summary:        The database access library for C++ programmers
 
 Group:          System Environment/Libraries
 License:        Boost
 URL:            http://%{name}.sourceforge.net
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# This issue has been fixed upstream, e.g., see:
-#  http://soci.git.sourceforge.net/git/gitweb.cgi?p=soci/soci;a=commitdiff;h=9e467b5a4ab4cdda6cd801fb76b2d853340dc5d7):
-Patch0:         %{name}-%{version}-gcc46-compatibility.patch
-# This patch is being submitted upstream. A decision about whether and how
-# burying headers) should be taken after the release of version 3.1.0):
-Patch1:         %{name}-%{version}-buried-headers.patch
-# Just add standard documentation, from upstream documents:
-Patch2:         %{name}-%{version}-add-doc.patch
-# This patch is temporary, for the 3.0.0 version, as:
-#  * it allows to build cleanly with the GNU Autotools;
-#  * whereas upstream now uses CMake.
-Patch3:         %{name}-%{version}-gnu-autotools-compatibility.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.zip
+BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
+BuildRequires:  cmake
 BuildRequires:  boost-devel
 BuildRequires:  libtool
 
@@ -49,46 +42,70 @@ illusion of embedding SQL in regular C++ code, staying entirely within
 the C++ standard.
 
 
+%{?with_sqlite3:%package        sqlite3
+Summary:        SQLite3 back-end for %{name}
+Group:          System Environment/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  sqlite-devel
+
+%description    sqlite3
+This package contains the SQLite3 back-end for %{name}, i.e.,
+dynamic library specific to the SQLite3 database. If you would like to
+use %{name} in your programs with SQLite3, you will need to
+install %{name}-sqlite3.}
+
 %{?with_mysql:%package        mysql
 Summary:        MySQL back-end for %{name}
 Group:          System Environment/Libraries
-Requires:       %{name} = %{version}-%{release}
-BuildRequires:  mysql-devel >= 5.0
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  mysql-devel
 
 %description    mysql
-This package contains the MySQL back-end for SOCI, i.e.,
+This package contains the MySQL back-end for %{name}, i.e.,
 dynamic library specific to the MySQL database. If you would like to
-use SOCI in your programs with MySQL, you will need to
+use %{name} in your programs with MySQL, you will need to
 install %{name}-mysql.}
 
 %{?with_postgresql:%package        postgresql
 Summary:        PostGreSQL back-end for %{name}
 Group:          System Environment/Libraries
-Requires:       %{name} = %{version}-%{release}
-BuildRequires:  postgresql-devel >= 7.1
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  postgresql-devel
 
 %description    postgresql
-This package contains the PostGreSQL back-end for SOCI, i.e.,
+This package contains the PostGreSQL back-end for %{name}, i.e.,
 dynamic library specific to the PostGreSQL database. If you would like
-to use SOCI in your programs with PostGreSQL, you will need to
+to use %{name} in your programs with PostGreSQL, you will need to
 install %{name}-postgresql.}
+
+%{?with_odbc:%package        odbc
+Summary:        ODBC back-end for %{name}
+Group:          System Environment/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  unixODBC-devel
+
+%description    odbc
+This package contains the ODBC back-end for %{name}, i.e.,
+dynamic library specific to the ODBC connectors. If you would like to
+use %{name} in your programs with ODBC, you will need to
+install %{name}-odbc.}
 
 %{?with_oracle:%package        oracle
 Summary:        Oracle back-end for %{name}
 Group:          System Environment/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    oracle
-This package contains the Oracle back-end for SOCI, i.e.,
+This package contains the Oracle back-end for %{name}, i.e.,
 dynamic library specific to the Oracle database. If you would like to
-use SOCI in your programs with Oracle, you will need to install
+use %{name} in your programs with Oracle, you will need to install
 %{name}-oracle.}
 
 
 %package        devel
 Summary:        Header files, libraries and development documentation for %{name}
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
@@ -96,12 +113,25 @@ This package contains the header files, dynamic libraries and
 development documentation for %{name}. If you would like to develop
 programs using %{name}, you will need to install %{name}-devel.
 
+%{?with_sqlite3:%package        sqlite3-devel
+Summary:        SQLite3 back-end for %{name}
+Group:          Development/Libraries
+Requires:       %{name}-devel = %{version}-%{release}
+Requires:       %{name}-sqlite3 = %{version}-%{release}
+Requires:       sqlite-devel
+
+%description    sqlite3-devel
+This package contains the SQLite3 back-end for %{name}, i.e., header
+files and dynamic libraries specific to the SQLite3 database. If you
+would like to develop programs using %{name} and SQLite3, you will need
+to install %{name}-sqlite3.}
+
 %{?with_mysql:%package        mysql-devel
 Summary:        MySQL back-end for %{name}
 Group:          Development/Libraries
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       %{name}-mysql = %{version}-%{release}
-Requires:       mysql-devel >= 5.0
+Requires:       mysql-devel
 
 %description    mysql-devel
 This package contains the MySQL back-end for %{name}, i.e., header
@@ -114,13 +144,26 @@ Summary:        PostGreSQL back-end for %{name}
 Group:          Development/Libraries
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       %{name}-postgresql = %{version}-%{release}
-Requires:       postgresql-devel >= 7.1
+Requires:       postgresql-devel
 
 %description    postgresql-devel
 This package contains the PostGreSQL back-end for %{name}, i.e., header
 files and dynamic libraries specific to the PostGreSQL database. If
 you would like to develop programs using %{name} and PostGreSQL, you
 will need to install %{name}-postgresql.}
+
+%{?with_odbc:%package        odbc-devel
+Summary:        ODBC back-end for %{name}
+Group:          Development/Libraries
+Requires:       %{name}-devel = %{version}-%{release}
+Requires:       %{name}-odbc = %{version}-%{release}
+Requires:       unixODBC-devel
+
+%description    odbc-devel
+This package contains the Odbc back-end for %{name}, i.e., header
+files and dynamic libraries specific to the Odbc database. If you
+would like to develop programs using %{name} and Odbc, you will need
+to install %{name}-odbc.}
 
 %{?with_oracle:%package        oracle-devel
 Summary:        Oracle back-end for %{name}
@@ -135,85 +178,65 @@ would like to develop programs using %{name} and Oracle, you will need
 to install %{name}-oracle.}
 
 
-%package doc
-Summary:        HTML documentation for the SOCI library
+%package        doc
+Summary:        HTML documentation for the %{name} library
 Group:          Documentation
-%if 0%{?fedora} >= 10
+%if 0%{?fedora} || 0%{?rhel} > 5
 BuildArch:      noarch
-#BuildRequires:  texlive-latex, texlive-dvips
 %endif
-#BuildRequires:  tetex-latex, tetex-dvips
+#BuildRequires:  tex(latex)
 #BuildRequires:  doxygen, ghostscript
 
-%description doc
-This package contains the documentation in the HTML format of the SOCI
-library. The documentation is the same as at the SOCI web page.
+%description    doc
+This package contains the documentation in the HTML format of the %{name}
+library. The documentation is the same as at the %{name} web page.
 
 
 %prep
 %setup -q
 
-# Apply the g++ 4.6 compatibility patch
-%patch0 -p1
-
 # Rename change-log and license file, so that they comply with
 # packaging standard
 mv CHANGES ChangeLog
 mv LICENSE_1_0.txt COPYING
-rm -f INSTALL
-
-# Remove MacOSX compatibility building files
-rm -f build/unix/._*.tcl
-rm -f ._Makefile ._configure
-rm -f src/core/._*.h src/core/._*.cpp
-rm -f src/backends/postgresql/._*.h
-rm -f doc/._*.html
-
-# Rename the source code directory, so that the files (e.g, header
-# files) can be exported correctly into {_standard_dir}/%%{name}
-mv src %{name}
-
-# Apply the buried headers patch
-%patch1 -p1
-
-# Add standard documentation
-%patch2 -p1
-
-# Apply the GNU Autotools compatibility patch
-%patch3 -p1
-
-# Fix some permissions and formats
-find ./doc -type f -perm 755 -exec chmod 644 {} \;
-chmod -x AUTHORS ChangeLog COPYING NEWS README
-# find . -type f -name '*.[hc]pp' -exec chmod 644 {} \;
+echo "2011-10-08:" > NEWS
+echo "- Version 3.1.0" >> NEWS
+echo "- See the ChangeLog file for more details." >> NEWS
 
 
 %build
-%configure --disable-static \
-%{?with_mysql:--enable-backend-mysql} \
-%{?with_postgresql:--enable-backend-postgresql} \
-%{?with_oracle:--enable-backend-oracle %{?_with_oracle_incdir} %{?_with_oracle_libdir}}
-make %{?_smp_mflags}
+# Support for building tests.
+%define soci_testflags -DBUILD_TESTS="NONE"
+%if %{with tests}
+  %define soci_testflags -DSOCI_TEST=ON \
+   -DSOCI_TEST_EMPTY_CONNSTR="dummy" \
+   -DSOCI_TEST_SQLITE3_CONNSTR="test.db" \
+   -DSOCI_TEST_POSTGRESQL_CONNSTR:STRING="dbname=soci_test" \
+   -DSOCI_TEST_MYSQL_CONNSTR:STRING="db=soci_test user=mloskot password=pantera"
+%endif
+
+mkdir tmpbuild
+pushd tmpbuild
+# -DCMAKE_INSTALL_PREFIX:PATH=$RPM_BUILD_ROOT
+%cmake \
+ -DSOCI_EMPTY=%{?with_empty:ON}%{?without_empty:OFF} \
+ -DSOCI_SQLITE3=%{?with_sqlite3:ON}%{?without_sqlite3:OFF} \
+ -DSOCI_POSTGRESQL=%{?with_postgresql:ON}%{?without_postgresql:OFF} \
+ -DSOCI_MYSQL=%{?with_mysql:ON}%{?without_mysql:OFF} \
+ -DSOCI_ODBC=%{?with_odbc:ON}%{?without_odbc:OFF} \
+ -DWITH_ORACLE=%{?with_oracle:ON %{?_with_oracle_incdir} %{?_with_oracle_libdir}}%{?without_oracle:OFF} \
+ %{soci_testflags} ..
+make VERBOSE=1 %{?_smp_mflags}
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
+pushd tmpbuild
 make install DESTDIR=$RPM_BUILD_ROOT
+popd
 ##
 #  Remove unpackaged files from the buildroot
-rm -f $RPM_BUILD_ROOT%{_includedir}/%{name}/config.h
-rm -f $RPM_BUILD_ROOT%{_libdir}/lib%{name}_*.la
-##
-##
-#  Duplicate the header files, so as to keep the compatibility, for
-#  developers using the SOCI library, with the non-packaged version of
-#  that library.
-for header_file in $RPM_BUILD_ROOT%{_includedir}/%{name}/core/*.h; do
-  cp ${header_file} $RPM_BUILD_ROOT%{_includedir}/%{name}
-done
-%{?with_mysql:cp $RPM_BUILD_ROOT%{_includedir}/%{name}/backends/mysql/soci-mysql.h $RPM_BUILD_ROOT%{_includedir}/%{name}}
-%{?with_postgresql:cp $RPM_BUILD_ROOT%{_includedir}/%{name}/backends/postgresql/soci-postgresql.h $RPM_BUILD_ROOT%{_includedir}/%{name}}
-%{?with_oracle:cp $RPM_BUILD_ROOT%{_includedir}/%{name}/backends/oracle/soci-oracle.h $RPM_BUILD_ROOT%{_includedir}/%{name}}
-
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -222,6 +245,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
+%{?with_sqlite3:%post sqlite3 -p /sbin/ldconfig
+
+%postun sqlite3 -p /sbin/ldconfig}
+
 %{?with_mysql:%post mysql -p /sbin/ldconfig
 
 %postun mysql -p /sbin/ldconfig}
@@ -229,6 +256,10 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_postgresql:%post postgresql -p /sbin/ldconfig
 
 %postun postgresql -p /sbin/ldconfig}
+
+%{?with_odbc:%post odbc -p /sbin/ldconfig
+
+%postun odbc -p /sbin/ldconfig}
 
 %{?with_oracle:%post oracle -p /sbin/ldconfig
 
@@ -240,6 +271,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_libdir}/lib%{name}_core.so.*
+%{?with_empty:%{_libdir}/lib%{name}_empty.so.*}
+
+%{?with_sqlite3:%files sqlite3
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING NEWS README
+%{_libdir}/lib%{name}_sqlite3.so.*}
 
 %{?with_mysql:%files mysql
 %defattr(-,root,root,-)
@@ -251,6 +288,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_libdir}/lib%{name}_postgresql.so.*}
 
+%{?with_odbc:%files odbc
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING NEWS README
+%{_libdir}/lib%{name}_odbc.so.*}
+
 %{?with_oracle:%files oracle
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
@@ -260,36 +302,45 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%dir %{_includedir}/%{name}
-%dir %{_includedir}/%{name}/core
+%dir %{_includedir}/%{name}/
 %{_includedir}/%{name}/*.h
-%{_includedir}/%{name}/core/*.h
-%{_includedir}/%{name}/core/test
-%{_bindir}/%{name}-config
+%{?with_empty:%{_includedir}/%{name}/empty/}
 %{_libdir}/lib%{name}_core.so
-%{_libdir}/pkgconfig/%{name}.pc
-%{_datadir}/aclocal/%{name}.m4
-%{_mandir}/man1/%{name}-config.1.*
+%{?with_empty:%{_libdir}/lib%{name}_empty.so}
+
+%{?with_sqlite3:%files sqlite3-devel
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING NEWS README
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/sqlite3/
+%{_libdir}/lib%{name}_sqlite3.so}
 
 %{?with_mysql:%files mysql-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %dir %{_includedir}/%{name}
-%{_includedir}/%{name}/backends/mysql
+%{_includedir}/%{name}/mysql
 %{_libdir}/lib%{name}_mysql.so}
 
 %{?with_postgresql:%files postgresql-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %dir %{_includedir}/%{name}
-%{_includedir}/%{name}/backends/postgresql
+%{_includedir}/%{name}/postgresql
 %{_libdir}/lib%{name}_postgresql.so}
+
+%{?with_odbc:%files odbc-devel
+%defattr(-,root,root,-)
+%doc AUTHORS ChangeLog COPYING NEWS README
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/odbc/
+%{_libdir}/lib%{name}_odbc.so}
 
 %{?with_oracle:%files oracle-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %dir %{_includedir}/%{name}
-%{_includedir}/%{name}/backends/oracle
+%{_includedir}/%{name}/oracle
 %{_libdir}/lib%{name}_oracle.so}
 
 
@@ -299,6 +350,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 31 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.1.0-1
+- Upstream integration
+- New CMake build system
+
 * Sat Jul 23 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> - 3.0.0-23
 - Rebuild for Boost-1.47.0-2
 
@@ -361,7 +416,7 @@ rm -rf $RPM_BUILD_ROOT
 - Restarted from pristine version 3.0.0 of upstream (SOCI) project
 
 * Sat Apr  4 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-2
-- Specific RPM for each backend
+- Specific RPM for each back-end
 
 * Fri Mar 27 2009 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.0.0-1
 - First RPM release

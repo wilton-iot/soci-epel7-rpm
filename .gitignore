@@ -1,9 +1,10 @@
 soci-*.tar.*
+soci-*.zip
 soci-*.src.rpm
 .gitignore
 clog
 .build-*
-/soci-3.0.0
+/soci-3.?.?
 /noarch
 /x86_64
 

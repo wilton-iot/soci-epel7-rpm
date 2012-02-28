@@ -22,7 +22,7 @@
 #
 Name:           soci
 Version:        3.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -350,6 +350,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-3
+- Rebuilt for c++ ABI breakage
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

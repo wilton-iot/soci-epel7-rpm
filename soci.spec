@@ -21,8 +21,8 @@
 ##
 #
 Name:           soci
-Version:        3.2.1
-Release:        3%{?dist}
+Version:        3.2.2
+Release:        1%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -350,6 +350,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 19 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.2.2-1
+- Upstream integration
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

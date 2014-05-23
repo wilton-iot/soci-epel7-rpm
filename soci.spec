@@ -22,7 +22,7 @@
 #
 Name:           soci
 Version:        3.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -350,6 +350,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri May 23 2014 Petr Machata <pmachata@redhat.com> - 3.2.2-2
+- Rebuild for boost 1.55.0
+
 * Sat Oct 19 2013 Denis Arnaud <denis.arnaud_fedora@m4x.org> 3.2.2-1
 - Upstream integration
 

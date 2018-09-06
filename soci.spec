@@ -22,7 +22,7 @@
 #
 Name:           soci
 Version:        3.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        The database access library for C++ programmers
 
@@ -30,6 +30,7 @@ Group:          System Environment/Libraries
 License:        Boost
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Patch0:         sqlite-params-default-init-fix.patch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  cmake
@@ -193,6 +194,7 @@ library. The documentation is the same as at the %{name} web page.
 
 %prep
 %setup -q
+%patch0 -p1
 
 # Rename change-log and license file, so that they comply with
 # packaging standard
@@ -350,6 +352,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 06 2018 Alex <alex@staticlibs.net> - 3.2.3-2
+- add sqlite-params-default-init-fix.patch https://github.com/SOCI/soci/pull/677
+
 * Thu Apr 09 2015 Fedora Release Monitoring <release-monitoring@fedoraproject.org> - 3.2.3-1
 - Update to 3.2.3 (#1210126)
 
